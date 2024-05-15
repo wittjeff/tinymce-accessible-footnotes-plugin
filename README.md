@@ -13,45 +13,26 @@ Follow these steps to set up the plugin in your TinyMCE environment:
 
 ### Prerequisites
 
-- Node.js and npm installed on your machine
-- Yarn installed on your machine
+- TinyMCE environment running on your machine
 
 ### Installation
 
-1. **Install Yeoman generator:**
+1. **Edit your index.html file like this:**
 
    ```bash
-   npm install -g yo
+   tinymce.init({
+          selector: 'textarea',
+          external_plugins: {
+                'test-footnotes': 'https://wittjeff.github.io/tinymce-accessible-footnotes-plugin/new-footnotes/scratch/compiled/plugin.min.js',
+                },
+          plugins: 'new-footnotes',
+          toolbar: 'new-footnotes',
+   });
 
-2. **Install Yarn:**
 
-   ```bash
-   npm install -g yarn
-
-3. **Downgrade Yeoman generator to version 4.3.1:**
-
-   ```bash
-   npm install -g yo@4.3.1
-
-4. **Clone the repository and navigate to the plugin directory:**
-
-   ```bash
-   git clone https://github.com/yourusername/new-footnotes.git
-   cd new-footnotes
-
-5. **Install dependencies using Yarn:**
-
-   ```bash
-   yarn install
-
-6. **Running the plugin:**
-
-   ```bash
-   npm start
-This will start the live environment, and you can begin developing and testing the plugin.
 
 Usage
-Once installed, the plugin will be available in the TinyMCE editor toolbar. You can use it to create footnotes that comply with WCAG ARIA specifications.
+Once imported, the plugin will be available in the TinyMCE editor toolbar. You can use it to create footnotes that comply with WCAG ARIA specifications.
 
 Contributing
 Contributions are welcome! Please feel free to submit a pull request or open an issue if you encounter any problems or have suggestions for improvements.
