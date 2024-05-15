@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+    <h1>TinyMCE Test</h1>
+  <textarea>
+    Welcome to TinyMCE!
+  </textarea>
+  <script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: '',
+      toolbar: 'blocks bold forecolor backcolor | language | code',
+      content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+      content_langs: [
+        { title: 'English', code: 'en' },
+        { title: 'Spanish', code: 'es' },
+        { title: 'French', code: 'fr' },
+        { title: 'German', code: 'de' },
+      ],
+      init_instance_callback: (editor) => {
+        editor.on('submit', (e) => {
+          console.log(`The ${e.command} command was fired.`);
+        });
+        setup: (editor) => {
+            editor.on('submit', (e) => {
+                console.log('Submit event fires.');
+            });
+        }
+      }
+    });
+
+  </script>
+</body>
+</html>
