@@ -23,13 +23,11 @@ Follow these steps to set up the plugin in your TinyMCE environment:
    tinymce.init({
           selector: 'textarea',
           external_plugins: {
-                'test-footnotes': 'https://wittjeff.github.io/tinymce-accessible-footnotes-plugin/new-footnotes/scratch/compiled/plugin.min.js',
+                'new-footnotes': 'https://wittjeff.github.io/tinymce-accessible-footnotes-plugin/new-footnotes/scratch/compiled/plugin.min.js',
                 },
           plugins: 'new-footnotes',
           toolbar: 'new-footnotes',
    });
-
-
 
 Usage
 Once imported, the plugin will be available in the TinyMCE editor toolbar. You can use it to create footnotes that comply with WCAG ARIA specifications.
