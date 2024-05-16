@@ -5,6 +5,17 @@ declare const tinymce: TinyMCE;
 const setup = (editor: Editor, url: string): void => {
     let footnoteCounter = 1;
 
+    // Inject CSS for footnotes
+    const css = `
+        .footnote-highlight {
+            background-color: yellow !important;
+        }
+    `;
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
     editor.ui.registry.addButton('new-footnotes', {
         text: 'Footnote',
         onAction: () => {
@@ -49,9 +60,9 @@ const setup = (editor: Editor, url: string): void => {
     function insertFootnote(selectedText: string, footnoteText: string) {
         const footnoteId = 'footnote-' + (new Date()).getTime();
         const footnoteNumber = footnoteCounter++;
-        const footnoteMarker = `<span>${selectedText}<a id="footnote-entry-${footnoteId}-ref" role="doc-noteref" aria-label="footnote-entry-${footnoteId}" href="#footnote-entry-${footnoteId}"><sup>[${footnoteNumber}]</sup></a></span>`;
+        const footnoteMarker = `<span>${selectedText}<a id="footnote-entry-${footnoteId}-ref" role="doc-noteref" aria-labelledby="footnote-entry-${footnoteId}" href="#footnote-entry-${footnoteId}"><sup>[${footnoteNumber}]</sup></a></span>`;
         const footnoteContent = `
-            <li>
+            <li id="footnote-entry-${footnoteId}">
                 <a id="footnote-entry-${footnoteId}">
                     
                 </a>
@@ -71,6 +82,27 @@ const setup = (editor: Editor, url: string): void => {
             </section>`);
         }
     }
+
+    function removeOrphanFootnotes() {
+        const footnoteRefs = editor.dom.select('a[role="doc-noteref"]');
+        const footnoteIds = footnoteRefs.map(ref => ref.id.replace('-ref', ''));
+
+        const footnotes = editor.dom.select('li[id^="footnote-"]');
+        footnotes.forEach(footnote => {
+            const footnoteId = footnote.id;
+            if (!footnoteIds.includes(footnoteId)) {
+                editor.dom.remove(footnote);
+            }
+        });
+
+        // Remove empty footnotes section
+        const footnotesSection = editor.dom.select('section[role="doc-footnotes"]')[0];
+        if (footnotesSection && footnotesSection.querySelectorAll('li').length === 0) {
+            editor.dom.remove(footnotesSection);
+        }
+    }
+
+    editor.on('input', removeOrphanFootnotes);
 };
 
 export default (): void => {
