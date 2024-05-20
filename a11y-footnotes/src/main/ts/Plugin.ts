@@ -66,7 +66,7 @@ const setup = (editor: Editor, url: string): void => {
                 <a id="footnote-entry-${footnoteId}">
                     
                 </a>
-                ${footnoteText}
+                <span contenteditable="true">${footnoteText}</span>
                 <a role="doc-backlink" href="#footnote-entry-${footnoteId}-ref" aria-label="Back to content">↵</a>
             </li>`;
 
@@ -76,7 +76,7 @@ const setup = (editor: Editor, url: string): void => {
         if (footnotesSection) {
             footnotesSection.innerHTML += footnoteContent;
         } else {
-            editor.setContent(editor.getContent() + `<hr /><section role="doc-footnotes" aria-label="footnotes">
+            editor.setContent(editor.getContent() + `<hr /><section role="doc-footnotes" aria-label="footnotes" contenteditable="false">
                 <h3 class="sr-only" id="footnotes-block-${footnoteId}">Footnotes</h3>
                 <ol>${footnoteContent.trim()}</ol>
             </section>`);
