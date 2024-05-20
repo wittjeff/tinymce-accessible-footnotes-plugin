@@ -31,5 +31,5 @@ Follow these steps to set up the plugin in your TinyMCE environment:
 Usage
 Once imported, the plugin will be available in the TinyMCE editor toolbar. You can use it to create footnotes that comply with WCAG ARIA specifications.
 
-Contributing
+
 Contributions are welcome! Please feel free to submit a pull request or open an issue if you encounter any problems or have suggestions for improvements.
