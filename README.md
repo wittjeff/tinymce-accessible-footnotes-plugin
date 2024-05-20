@@ -25,7 +25,6 @@ Follow these steps to set up the plugin in your TinyMCE environment:
           external_plugins: {
                 'new-footnotes': 'https://wittjeff.github.io/tinymce-accessible-footnotes-plugin/new-footnotes/scratch/compiled/plugin.min.js',
                 },
-          plugins: 'new-footnotes',
           toolbar: 'new-footnotes',
    });
 
