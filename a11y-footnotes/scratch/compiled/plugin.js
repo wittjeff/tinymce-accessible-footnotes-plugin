@@ -13,7 +13,8 @@
       style.appendChild(document.createTextNode(css));
       document.head.appendChild(style);
       editor.ui.registry.addButton('a11y-footnotes', {
-        icon: 'footnote',
+        icon: 'custom-footnote-icon',
+        tooltip: 'Insert Footnote',
         onAction: () => {
           const selectedText = editor.selection.getContent({ format: 'text' });
           if (!selectedText) {
@@ -49,6 +50,7 @@
           });
         }
       });
+      editor.ui.registry.addIcon('custom-footnote-icon', '<img src="/a11y-footnotes/icons/footnote.svg" style="height: 28px; width: 28px;"/>');
       function insertFootnote(selectedText, footnoteText) {
         const footnoteId = 'footnote-' + new Date().getTime();
         const footnoteNumber = footnoteCounter++;
