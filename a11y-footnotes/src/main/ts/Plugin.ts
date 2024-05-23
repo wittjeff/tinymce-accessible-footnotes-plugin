@@ -162,7 +162,7 @@ const setup = (editor: Editor, url: string): void => {
         {
             backlink.href = `#footnote-entry-${index + 1}-ref`;
             backlink.setAttribute('data-mce-href', `#footnote-entry-${index + 1}-ref`);
-            backlink.setAttribute('aria-label', `="Back to content of ${index + 1}-ref`);
+            backlink.setAttribute('aria-label', `="Back to content`);
         }
     }
 

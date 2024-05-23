@@ -123,7 +123,7 @@
         if (backlink) {
           backlink.href = `#footnote-entry-${ index + 1 }-ref`;
           backlink.setAttribute('data-mce-href', `#footnote-entry-${ index + 1 }-ref`);
-          backlink.setAttribute('aria-label', `="Back to content of ${ index + 1 }-ref`);
+          backlink.setAttribute('aria-label', `="Back to content`);
         }
       }
       function list_sort() {
