@@ -153,12 +153,16 @@ const setup = (editor: Editor, url: string): void => {
         }
         refElement.href = `#footnote-entry-${index + 1}`;
         refElement.id = `footnote-entry-${index + 1}-ref`;
+        refElement.setAttribute('data-mce-href', `#footnote-entry-${index + 1}`);
+        refElement.setAttribute('aria-labelledby', `#footnote-entry-footnote-${index + 1}`);
         footnoteElement.id = `footnote-entry-${index + 1}`;
     
         const backlink = footnoteElement.querySelector('a[role="doc-backlink"]') as HTMLAnchorElement;
         if (backlink) 
         {
             backlink.href = `#footnote-entry-${index + 1}-ref`;
+            backlink.setAttribute('data-mce-href', `#footnote-entry-${index + 1}-ref`);
+            backlink.setAttribute('aria-label', `="Back to content of ${index + 1}-ref`);
         }
     }
 
