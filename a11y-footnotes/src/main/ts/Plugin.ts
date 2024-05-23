@@ -90,57 +90,136 @@ const setup = (editor: Editor, url: string): void => {
         reorderFootnotes();
     }
 
-    // Function to reorder footnotes and update their references
+
     function reorderFootnotes() {
+        
+
         const footnoteRefs = editor.dom.select('a[role="doc-noteref"]');
-        footnoteRefs.forEach((ref, index) => {
-            const refElement = ref as HTMLAnchorElement;
-            const sup = ref.querySelector('sup');
-            if (sup) {
-                sup.textContent = `[${index + 1}]`;
+        const footnotes = editor.dom.select('li[id^="footnote-"]');
+
+
+        if (footnoteRefs.length !== footnotes.length) 
+        {
+            console.error('Mismatch between number of footnote references and footnotes');
+        } 
+        else 
+        {
+            let refElement = footnoteRefs[0] as HTMLAnchorElement;
+            let footnoteElement = footnotes[footnotes.length - 1] as HTMLLIElement;
+            if (refElement.href.endsWith(`#${footnoteElement.id}`))
+            {
+                re_odering(footnoteRefs,footnoteElement,0);
+                for (let index = 1; index < footnoteRefs.length; index++) 
+                {
+                    footnoteElement = footnotes[index - 1] as HTMLLIElement;
+                    re_odering(footnoteRefs,footnoteElement,index);
+                }
+                list_sort();
             }
-            refElement.href = `#footnote-entry-${index + 1}`;
-            refElement.id = `footnote-entry-${index + 1}-ref`;
+            else
+            {
+                refElement = footnoteRefs[footnoteRefs.length-1] as HTMLAnchorElement;
+                footnoteElement = footnotes[footnotes.length - 1] as HTMLLIElement;
+                if(!refElement.href.endsWith(`#${footnoteElement.id}`))
+                {
+                    
+                    for (let index = 0; index < footnoteRefs.length; index++) {
+                        refElement = footnoteRefs[index] as HTMLAnchorElement;
+                        footnoteElement = footnotes[footnotes.length - 1] as HTMLLIElement;
+                        if(refElement.href.endsWith(`#${footnoteElement.id}`))
+                        {
+                            re_odering(footnoteRefs,footnoteElement,index);
+                            for (let indx = index+1; indx < footnoteRefs.length; indx++) {
+                                footnoteElement = footnotes[indx-1] as HTMLLIElement;
+                                re_odering(footnoteRefs,footnoteElement,indx);
+                            }
+                            break;
+                        }
+                    }
+                    list_sort();
+                }
+            }
+        }
+
+    }
+
+    function re_odering(footnoteRefs,footnoteElement,index)
+    {
+        const refElement = footnoteRefs[index] as HTMLAnchorElement;
+        const sup = footnoteRefs[index].querySelector('sup');
+        if (sup) 
+        {
+            sup.textContent = `[${index+1}]`;
+        }
+        refElement.href = `#footnote-entry-${index + 1}`;
+        refElement.id = `footnote-entry-${index + 1}-ref`;
+        footnoteElement.id = `footnote-entry-${index + 1}`;
+    
+        const backlink = footnoteElement.querySelector('a[role="doc-backlink"]') as HTMLAnchorElement;
+        if (backlink) 
+        {
+            backlink.href = `#footnote-entry-${index + 1}-ref`;
+        }
+    }
+
+
+    function list_sort()
+    {
+        const footnoteLists = editor.dom.select('ol');
+        const footnotes = editor.dom.select('li[id^="footnote-"]');
+
+        footnotes.sort((a, b) => {
+            const aIdNumber = parseInt(a.id.split('-').pop(), 10);
+            const bIdNumber = parseInt(b.id.split('-').pop(), 10);
+            return aIdNumber - bIdNumber;
         });
 
-        const footnotes = editor.dom.select('li[id^="footnote-"]');
-        footnotes.forEach((footnote, index) => {
-            const footnoteElement = footnote as HTMLLIElement;
-            footnoteElement.id = `footnote-entry-${index + 1}`;
-            const backlink = footnote.querySelector('a[role="doc-backlink"]') as HTMLAnchorElement;
-            if (backlink) {
-                backlink.href = `#footnote-entry-${index + 1}-ref`;
+        footnoteLists.forEach(footnoteList => {
+            while (footnoteList.firstChild) {
+                footnoteList.removeChild(footnoteList.firstChild);
             }
+            footnotes.forEach(footnote => {
+                footnoteList.appendChild(footnote);
+            });
         });
     }
 
     // Function to remove orphan footnotes (those without references)
     function removeOrphanFootnotes() {
         const footnoteRefs = editor.dom.select('a[role="doc-noteref"]');
-        const footnoteIds = footnoteRefs.map(ref => ref.id.replace('-ref', ''));
-
         const footnotes = editor.dom.select('li[id^="footnote-"]');
-        footnotes.forEach(footnote => {
-            const footnoteId = footnote.id;
-            if (!footnoteIds.includes(footnoteId)) {
-                editor.windowManager.confirm('The reference number for this footnote has been deleted. Do you want to delete the footnote as well?', function(state) {
-                    if (state) {
-                        editor.dom.remove(footnote);
-                    }
-                });
+        
+        if(footnoteRefs.length<footnotes.length){
+            
+            if(footnoteRefs.length==0)
+            {
+                remove_child(footnotes,0);   
             }
-        });
-
-        // Remove empty footnotes section
-        const footnotesSection = editor.dom.select('section[role="doc-footnotes"]')[0];
-        if (footnotesSection && footnotesSection.querySelectorAll('li').length === 0) {
-            editor.dom.remove(footnotesSection);
+            else
+            {
+                for (let index = 0; index < footnotes.length; index++) {
+                    let refElement = footnoteRefs[index] as HTMLAnchorElement;
+                    let footnoteElement = footnotes[index] as HTMLLIElement;
+                    if (!refElement.href.endsWith(`#${footnoteElement.id}`))
+                    {
+                        remove_child(footnotes,index);
+                        for (let indx = index+1; index < footnotes.length; indx++) {
+                            refElement = footnoteRefs[indx] as HTMLAnchorElement;
+                            footnoteElement = footnotes[indx] as HTMLLIElement;
+                            re_odering(footnoteRefs,footnoteElement,indx-1)
+                        }
+                        break;
+                    }
+                }
+            }
         }
-
-        reorderFootnotes();
+        
     }
-
-    // Listen for input events to handle removal of orphan footnotes
+    function remove_child(footnotes,index)
+    {
+        footnotes[index].parentNode.removeChild(footnotes[index]);
+    }
+   
     editor.on('input', removeOrphanFootnotes);
 };
 
@@ -148,3 +227,4 @@ const setup = (editor: Editor, url: string): void => {
 export default (): void => {
     tinymce.PluginManager.add('a11y-footnotes', setup);
 };
+

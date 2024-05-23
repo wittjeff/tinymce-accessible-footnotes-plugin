@@ -74,44 +74,96 @@
       }
       function reorderFootnotes() {
         const footnoteRefs = editor.dom.select('a[role="doc-noteref"]');
-        footnoteRefs.forEach((ref, index) => {
-          const refElement = ref;
-          const sup = ref.querySelector('sup');
-          if (sup) {
-            sup.textContent = `[${ index + 1 }]`;
-          }
-          refElement.href = `#footnote-entry-${ index + 1 }`;
-          refElement.id = `footnote-entry-${ index + 1 }-ref`;
-        });
         const footnotes = editor.dom.select('li[id^="footnote-"]');
-        footnotes.forEach((footnote, index) => {
-          const footnoteElement = footnote;
-          footnoteElement.id = `footnote-entry-${ index + 1 }`;
-          const backlink = footnote.querySelector('a[role="doc-backlink"]');
-          if (backlink) {
-            backlink.href = `#footnote-entry-${ index + 1 }-ref`;
+        if (footnoteRefs.length !== footnotes.length) {
+          console.error('Mismatch between number of footnote references and footnotes');
+        } else {
+          let refElement = footnoteRefs[0];
+          let footnoteElement = footnotes[footnotes.length - 1];
+          if (refElement.href.endsWith(`#${ footnoteElement.id }`)) {
+            re_odering(footnoteRefs, footnoteElement, 0);
+            for (let index = 1; index < footnoteRefs.length; index++) {
+              footnoteElement = footnotes[index - 1];
+              re_odering(footnoteRefs, footnoteElement, index);
+            }
+            list_sort();
+          } else {
+            refElement = footnoteRefs[footnoteRefs.length - 1];
+            footnoteElement = footnotes[footnotes.length - 1];
+            if (!refElement.href.endsWith(`#${ footnoteElement.id }`)) {
+              for (let index = 0; index < footnoteRefs.length; index++) {
+                refElement = footnoteRefs[index];
+                footnoteElement = footnotes[footnotes.length - 1];
+                if (refElement.href.endsWith(`#${ footnoteElement.id }`)) {
+                  re_odering(footnoteRefs, footnoteElement, index);
+                  for (let indx = index + 1; indx < footnoteRefs.length; indx++) {
+                    footnoteElement = footnotes[indx - 1];
+                    re_odering(footnoteRefs, footnoteElement, indx);
+                  }
+                  break;
+                }
+              }
+              list_sort();
+            }
           }
+        }
+      }
+      function re_odering(footnoteRefs, footnoteElement, index) {
+        const refElement = footnoteRefs[index];
+        const sup = footnoteRefs[index].querySelector('sup');
+        if (sup) {
+          sup.textContent = `[${ index + 1 }]`;
+        }
+        refElement.href = `#footnote-entry-${ index + 1 }`;
+        refElement.id = `footnote-entry-${ index + 1 }-ref`;
+        footnoteElement.id = `footnote-entry-${ index + 1 }`;
+        const backlink = footnoteElement.querySelector('a[role="doc-backlink"]');
+        if (backlink) {
+          backlink.href = `#footnote-entry-${ index + 1 }-ref`;
+        }
+      }
+      function list_sort() {
+        const footnoteLists = editor.dom.select('ol');
+        const footnotes = editor.dom.select('li[id^="footnote-"]');
+        footnotes.sort((a, b) => {
+          const aIdNumber = parseInt(a.id.split('-').pop(), 10);
+          const bIdNumber = parseInt(b.id.split('-').pop(), 10);
+          return aIdNumber - bIdNumber;
+        });
+        footnoteLists.forEach(footnoteList => {
+          while (footnoteList.firstChild) {
+            footnoteList.removeChild(footnoteList.firstChild);
+          }
+          footnotes.forEach(footnote => {
+            footnoteList.appendChild(footnote);
+          });
         });
       }
       function removeOrphanFootnotes() {
         const footnoteRefs = editor.dom.select('a[role="doc-noteref"]');
-        const footnoteIds = footnoteRefs.map(ref => ref.id.replace('-ref', ''));
         const footnotes = editor.dom.select('li[id^="footnote-"]');
-        footnotes.forEach(footnote => {
-          const footnoteId = footnote.id;
-          if (!footnoteIds.includes(footnoteId)) {
-            editor.windowManager.confirm('The reference number for this footnote has been deleted. Do you want to delete the footnote as well?', function (state) {
-              if (state) {
-                editor.dom.remove(footnote);
+        if (footnoteRefs.length < footnotes.length) {
+          if (footnoteRefs.length == 0) {
+            remove_child(footnotes, 0);
+          } else {
+            for (let index = 0; index < footnotes.length; index++) {
+              let refElement = footnoteRefs[index];
+              let footnoteElement = footnotes[index];
+              if (!refElement.href.endsWith(`#${ footnoteElement.id }`)) {
+                remove_child(footnotes, index);
+                for (let indx = index + 1; index < footnotes.length; indx++) {
+                  refElement = footnoteRefs[indx];
+                  footnoteElement = footnotes[indx];
+                  re_odering(footnoteRefs, footnoteElement, indx - 1);
+                }
+                break;
               }
-            });
+            }
           }
-        });
-        const footnotesSection = editor.dom.select('section[role="doc-footnotes"]')[0];
-        if (footnotesSection && footnotesSection.querySelectorAll('li').length === 0) {
-          editor.dom.remove(footnotesSection);
         }
-        reorderFootnotes();
+      }
+      function remove_child(footnotes, index) {
+        footnotes[index].parentNode.removeChild(footnotes[index]);
       }
       editor.on('input', removeOrphanFootnotes);
     };
