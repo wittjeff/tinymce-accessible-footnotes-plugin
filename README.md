@@ -23,7 +23,7 @@ Follow these steps to set up the plugin in your TinyMCE environment:
    tinymce.init({
           selector: 'textarea',
           external_plugins: {
-                'a11y-footnotes': 'https://wittjeff.github.io/tinymce-accessible-footnotes-plugin/a11y-footnotes/scratch/compiled/plugin.min.js',
+                'a11y-footnotes': 'https://wittjeff.github.io/tinymce-accessible-footnotes-plugin/a11y-footnotes/a11y-footnotes.min.js',
                 },
           toolbar: 'a11y-footnotes',
    });
