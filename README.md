@@ -13,7 +13,7 @@ Follow these steps to set up the plugin in your TinyMCE environment:
 
 ### Prerequisites
 
-- TinyMCE environment running on your machine
+- TinyMCE environment [running on your machine](https://www.tiny.cloud/docs/tinymce/latest/installation/)
 
 ### Installation
 
@@ -28,7 +28,7 @@ Follow these steps to set up the plugin in your TinyMCE environment:
           toolbar: 'a11y-footnotes',
    });
 
-Usage
+## Usage
 Once imported, the plugin will be available in the TinyMCE editor toolbar. You can use it to create footnotes that comply with WCAG ARIA specifications.
 
 
