@@ -25,7 +25,7 @@ Follow these steps to set up the plugin in your TinyMCE environment:
    tinymce.init({
           selector: 'textarea',
           external_plugins: {
-                'a11y-footnotes': '/[fix this...]/plugin.min.js'
+                'a11y-footnotes': 'https://a11y.bot/tinymce_external_plugins/[fix this...]/plugin.min.js'
                 },
           toolbar: 'a11y-footnotes',
    });
