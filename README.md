@@ -17,13 +17,15 @@ Follow these steps to set up the plugin in your TinyMCE environment:
 
 ### Installation
 
-1. **Edit your index.html file like this:**
+1. **Download this project.**
+2. Move it to [wherever custom plugins are supposed to live according to TinyMCE company]
+3. **Edit your index.html file like this:**
 
    ```bash
    tinymce.init({
           selector: 'textarea',
           external_plugins: {
-                'a11y-footnotes': 'https://wittjeff.github.io/tinymce-accessible-footnotes-plugin/a11y-footnotes/scratch/compiled/plugin.min.js'
+                'a11y-footnotes': '/[fix this...]/plugin.min.js'
                 },
           toolbar: 'a11y-footnotes',
    });
