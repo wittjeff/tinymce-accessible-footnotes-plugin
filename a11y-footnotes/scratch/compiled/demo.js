@@ -100,8 +100,8 @@ __webpack_require__.r(__webpack_exports__);
 Object(_main_ts_Plugin__WEBPACK_IMPORTED_MODULE_0__["default"])();
 tinymce.init({
     selector: 'textarea.tinymce',
-    plugins: 'code a11y-footnotes',
-    toolbar: 'a11y-footnotes'
+    plugins: 'code a11y-footnotes code link',
+    toolbar: 'a11y-footnotes code link'
 });
 
 
@@ -171,7 +171,7 @@ const setup = (editor, url) => {
         }
     });
     // Add the custom SVG icon
-    editor.ui.registry.addIcon('custom-footnote-icon', '<img src="../../../icons/footnote.svg" style="height: 28px; width: 28px;"/>');
+    editor.ui.registry.addIcon('custom-footnote-icon', '<img src="../../../icons/footnote.svg" style="height: 25px; width: 25px; vertical-align: middle;"/>');
     // Function to insert a footnote
     function insertFootnote(selectedText, footnoteText) {
         const footnoteId = 'footnote-' + (new Date()).getTime();
