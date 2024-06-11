@@ -50,7 +50,7 @@
           });
         }
       });
-      editor.ui.registry.addIcon('custom-footnote-icon', '<img src="../../../icons/footnote.svg" style="height: 25px; width: 25px; vertical-align: middle;"/>');
+      editor.ui.registry.addIcon('custom-footnote-icon', '<img src="../../../icons/footnote.svg" style="height: 24px; width: 24px; display: block; margin-top: 3px;"/>');
       function insertFootnote(selectedText, footnoteText) {
         const footnoteId = 'footnote-' + new Date().getTime();
         const footnoteNumber = footnoteCounter++;

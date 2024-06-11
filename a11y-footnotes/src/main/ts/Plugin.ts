@@ -61,7 +61,7 @@ const setup = (editor: Editor, url: string): void => {
     });
 
     // Add the custom SVG icon
-    editor.ui.registry.addIcon('custom-footnote-icon', '<img src="../../../icons/footnote.svg" style="height: 25px; width: 25px; vertical-align: middle;"/>');
+    editor.ui.registry.addIcon('custom-footnote-icon', '<img src="../../../icons/footnote.svg" style="height: 24px; width: 24px; display: block; margin-top: 3px;"/>');
 
 
     // Function to insert a footnote
